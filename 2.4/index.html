@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>2.3 First Component</title>
+</head>
+
+<body>
+	<!-- container node -->
+	<div id="app"></div>
+
+	<script src="http://fb.me/react-0.11.1.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.11.1.js"></script>
+
+	<script type="text/jsx">
+		/** @jsx React.DOM */
+		var MessageBox = React.createClass({
+
+			getInitialState: function (){
+				return {
+					isVisible: true,
+					messages: [
+						'Evrybudy betrayed me',
+						'I am fed up with this wurld',
+						'Oh hi Mark',
+						'You are tearing me apart Lisa'
+					]
+				}
+			},
+			render: function(){
+
+				var inlineStyles = {
+					display: this.state.isVisible ? 'block' : 'none'
+				};
+
+				var messages = this.state.messages.map(function(message){
+					return <SubMessage message={message} />
+				});
+				
+				return (
+					<div className="container jumbotron" style={inlineStyles}>
+						<h1>Hell World</h1>
+						{messages}
+					</div>
+				);
+			}
+		});
+
+		var SubMessage = React.createClass({
+
+			propTypes: {
+				message: React.PropTypes.string.isRequired
+			},
+
+			getDefaultProps: function() {
+				return {
+					message: 'Wubba Lubba Dub Dub!'
+				}
+			},
+
+			render: function () {
+				return (
+					<small>{this.props.message}</small>
+				);
+			}
+		});
+
+		var ReactComponent = React.renderComponent(
+			<MessageBox />,
+			document.querySelector('#app'),
+			function(){
+				console.log('this is not commonly used');
+			}
+		)
+	</script>
+</body>
+</html>
