@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>2.3 First Component</title>
+</head>
+
+<body>
+	<!-- container node -->
+	<div id="app"></div>
+
+	<script src="http://fb.me/react-0.11.1.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.11.1.js"></script>
+
+	<script type="text/jsx">
+		/** @jsx React.DOM */
+		var MessageBox = React.createClass({
+
+			getInitialState: function (){
+				return {
+					isVisible: true,
+					titleMessage: 'Wubba Lubba Dub Dub'
+				}
+			},
+			render: function(){
+
+				var inlineStyles = {
+					display: this.state.isVisible ? 'block' : 'none'
+				};
+				
+				return (
+					<div className="container jumbotron" style={inlineStyles}>
+						<h1>{this.state.titleMessage}</h1>
+					</div>
+				);
+			}
+		});
+
+		var ReactComponent = React.renderComponent(
+			<MessageBox/>,
+			document.querySelector('#app'),
+			function(){
+				console.log('this is not commonly used');
+			}
+		)
+	</script>
+</body>
+</html>
