@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>2.4 First Component</title>
+    <title>3.1 First Component</title>
 </head>
 
 <body>
@@ -12,10 +12,27 @@
 
 	<script src="http://fb.me/react-0.11.1.js"></script>
     <script src="http://fb.me/JSXTransformer-0.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.1/lodash.min.js"></script>
 
 	<script type="text/jsx">
 		/** @jsx React.DOM */
 		var MessageBox = React.createClass({
+
+			deleteMessage: function(item){
+				var newMessages = _.without(this.state.messages, item);
+				this.setState({
+					messages: newMessages
+				});
+			},
+
+			handleAdd: function(e){
+				var newMessage = this.refs.newMessage.getDOMNode().value;
+				var newMessages = this.state.messages.concat([newMessage]);
+
+				this.setState({
+					messages: newMessages
+				});
+			},
 
 			getInitialState: function (){
 				return {
@@ -35,12 +52,14 @@
 				};
 
 				var messages = this.state.messages.map(function(message){
-					return <SubMessage message={message} />
-				});
+					return <SubMessage message={message} onDelete={this.deleteMessage} />
+				}.bind(this));
 				
 				return (
 					<div className="container jumbotron" style={inlineStyles}>
 						<h1>Hell World</h1>
+						<input ref="newMessage" type="text"></input>
+						<button className="btn btn-primary" onClick={this.handleAdd}>Add</button>
 						{messages}
 					</div>
 				);
@@ -48,6 +67,10 @@
 		});
 
 		var SubMessage = React.createClass({
+
+			handleDelete: function(e){
+				this.props.onDelete(this.props.message);
+			},
 
 			propTypes: {
 				message: React.PropTypes.string.isRequired
@@ -61,7 +84,10 @@
 
 			render: function () {
 				return (
-					<p>{this.props.message}</p>
+					<div>
+						<p>{this.props.message}</p>
+						<button onClick={this.handleDelete} className="btn btn-danger">x</button>
+					</div>
 				);
 			}
 		});

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>2.4 First Component</title>
+    <title>2.5 &amp; 2.6 First Component</title>
 </head>
 
 <body>
@@ -16,6 +16,15 @@
 	<script type="text/jsx">
 		/** @jsx React.DOM */
 		var MessageBox = React.createClass({
+
+			handleAdd: function(e){
+				var newMessage = this.refs.newMessage.getDOMNode().value;
+				var newMessages = this.state.messages.concat([newMessage]);
+
+				this.setState({
+					messages: newMessages
+				});
+			},
 
 			getInitialState: function (){
 				return {
@@ -41,6 +50,8 @@
 				return (
 					<div className="container jumbotron" style={inlineStyles}>
 						<h1>Hell World</h1>
+						<input ref="newMessage" type="text"></input>
+						<button className="btn btn-primary" onClick={this.handleAdd}>Add</button>
 						{messages}
 					</div>
 				);
