@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>4.1 Mounting</title>
+</head>
+
+<body>
+	<!-- container node -->
+	<div id="app"></div>
+
+	<script src="http://fb.me/react-with-addons-0.11.1.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.1/lodash.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+
+	<script type="text/jsx">
+	/** @jsx React.DOM */
+
+	var Dashboard = React.createClass({
+
+		loadData: function(){
+			return $.get('https://gsr-demo.firebaseio-demo.com/' + this.props.url + '/.json');
+		},
+
+		componentWillMount: function() {
+			debugger;
+		},
+
+		componentDidMount: function(){
+			debugger;
+			this.loadData(this.props.url).then(function(data){
+				this.setState({
+					metric: data
+				});
+			}.bind(this));
+		},
+
+		getInitialState: function () {
+			return {
+				metric: 0
+			}
+		},
+
+		render: function () {
+			return (
+				<div className="jumbotron">
+					<h2>{this.state.metric}</h2>
+				</div>
+			);
+		}
+	});
+
+	var dashComponent = React.renderComponent(
+		<Dashboard url="metric"/>,
+		document.querySelector('#app')
+	);
+		
+	</script>
+</body>
+</html>
