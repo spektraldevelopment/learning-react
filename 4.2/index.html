@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>4.1 Mounting</title>
+    <title>4.2 Mounting</title>
 </head>
 
 <body>
@@ -20,33 +20,50 @@
 
 	var Dashboard = React.createClass({
 
-		loadData: function(){
+		loadData: function(url){
 			return $.get('https://gsr-demo.firebaseio-demo.com/' + this.props.url + '/.json');
 		},
 
 		componentWillMount: function() {
-			//debugger;
+			debugger;
 		},
 
 		componentDidMount: function(){
 			//debugger;
-			this.loadData().then(function(data){
+			this.loadData(this.props.url).then(function(data){
 				this.setState({
 					metric: data
 				});
 			}.bind(this));
 		},
 
+		componentWillReceiveProps: function(nextProps) {
+			var lastUrl = this.props.url;
+			this.loadData(nextProps.url).then(function(data){
+				this.setState({
+					lastRoute: lastUrl,
+					metric: data
+				});
+			}.bind(this));
+			//debugger;
+		},
+
+		shouldComponentUpdate: function(nextProps, nextState) {
+			return nextState.metric > 100;
+		},
+
 		getInitialState: function () {
 			return {
-				metric: 0
+				metric: 0,
+				lastRoute: ''
 			}
 		},
 
 		render: function () {
 			return (
 				<div className="jumbotron">
-					<h2>{this.state.metric}</h2>
+				{this.state.lastRoute}
+				<h2>{this.state.metric}</h2>
 				</div>
 			);
 		}

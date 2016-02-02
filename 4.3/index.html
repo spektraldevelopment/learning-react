@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>4.1 Mounting</title>
+    <title>4.2 Mounting</title>
 </head>
 
 <body>
@@ -14,13 +14,15 @@
     <script src="http://fb.me/JSXTransformer-0.11.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.1/lodash.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 	<script type="text/jsx">
 	/** @jsx React.DOM */
 
 	var Dashboard = React.createClass({
 
-		loadData: function(){
+		loadData: function(url){
 			return $.get('https://gsr-demo.firebaseio-demo.com/' + this.props.url + '/.json');
 		},
 
@@ -30,23 +32,47 @@
 
 		componentDidMount: function(){
 			//debugger;
-			this.loadData().then(function(data){
+			this.loadData(this.props.url).then(function(data){
 				this.setState({
 					metric: data
 				});
+				$('#tip').tooltip();
 			}.bind(this));
+		},
+
+		componentWillReceiveProps: function(nextProps) {
+			var lastUrl = this.props.url;
+			this.loadData(nextProps.url).then(function(data){
+				this.setState({
+					lastRoute: lastUrl,
+					metric: data
+				});
+			}.bind(this));
+			//debugger;
+		},
+
+		shouldComponentUpdate: function(nextProps, nextState) {
+			return nextState.metric > 100;
+		},
+
+		//called using React.unmountComponentAtNode(document.getElementById('app'));
+		componentWillUnmount: function() {
+			$('#tip').tooltip('destroy');
 		},
 
 		getInitialState: function () {
 			return {
-				metric: 0
+				metric: 0,
+				lastRoute: ''
 			}
 		},
 
 		render: function () {
 			return (
 				<div className="jumbotron">
-					<h2>{this.state.metric}</h2>
+				{this.state.lastRoute}
+				<a id="tip" href="#" data-toggle="tooltip" title="Hover!">Hover Over Me</a>
+				<h2>{this.state.metric}</h2>
 				</div>
 			);
 		}
