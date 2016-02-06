@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 
-var MessageBox = React.createClass({
+var MessageBox = React.createClass({displayName: "MessageBox",
 
   deleteMessage: function(message) {
     var newMessages = _.without(this.state.messages, message);
@@ -39,22 +39,22 @@ var MessageBox = React.createClass({
     };
 
     var messages = this.state.messages.map(function(message) {
-      return <SubMessage message={message} onDelete={this.deleteMessage} />;
+      return React.createElement(SubMessage, {message: message, onDelete: this.deleteMessage});
     }.bind(this));
 
     return (
-      <div className="container jumbotron" style={inlineStyles}>
-        <h2>Hello, World</h2>
-        <input ref="newMessage" type="text" />
-        <button className="btn btn-primary" onClick={this.handleAdd}>Add</button>
-        { messages }
-      </div>
+      React.createElement("div", {className: "container jumbotron", style: inlineStyles}, 
+        React.createElement("h2", null, "Hello, World"), 
+        React.createElement("input", {ref: "newMessage", type: "text"}), 
+        React.createElement("button", {className: "btn btn-primary", onClick: this.handleAdd}, "Add"), 
+         messages 
+      )
     );
   }
 });
 
 
-var SubMessage = React.createClass({
+var SubMessage = React.createClass({displayName: "SubMessage",
 
   handleDelete: function (e) {
     this.props.onDelete(this.props.message);
@@ -72,15 +72,15 @@ var SubMessage = React.createClass({
 
   render: function() {
     return (
-      <div>
-        {this.props.message}
-        <button onClick={this.handleDelete} className="btn btn-danger">x</button>
-      </div>
+      React.createElement("div", null, 
+        this.props.message, 
+        React.createElement("button", {onClick: this.handleDelete, className: "btn btn-danger"}, "x")
+      )
     );
   }
 });
 
 var reactComponent = React.renderComponent(
-  <MessageBox />,
+  React.createElement(MessageBox, null),
   document.getElementById('app')
 );
